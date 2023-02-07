@@ -118,7 +118,7 @@ const login = (req, resp) => {
                     }
                     resp.status(200).json(responseUserData);
                 } else {
-                    resp.status(401).json({'message': 'UnAutherized'});
+                    resp.status(401).json({'message': 'UnAuthorized'});
                 }
             });
         } else {

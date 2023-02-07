@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 mongoose.set('strictQuery', true);
 //==============================
 const UserRoute = require('./routes/UserRoute');
+const CustomerRoute = require('./routes/CustomerRoute');
 //==============================
 const app = express();
 const serverPort=process.env.SERVER_PORT;
@@ -25,7 +26,8 @@ mongoose.connect(
     });
 })
 //==================
-app.use('/api/v1/user', UserRoute)
+app.use('/api/v1/user', UserRoute);
+app.use('/api/v1/customer', CustomerRoute);
 //==================
 app.get('/api/v1/test', (req, res) => {
     res.status(200).json({'message': 'success!'});
