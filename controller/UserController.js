@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 
 const register = (request, response) => {
-    UserSchema.findOne({email:request.body.email}).then( exists=>{
-        if (exists==null){
+    UserSchema.findOne({email: request.body.email}).then(exists => {
+        if (exists == null) {
             bcrypt.hash(request.body.password, 10, function (err, hash) {
                 const dto = new UserSchema({
                     name: request.body.name,
@@ -14,8 +14,8 @@ const register = (request, response) => {
                 });
                 dto.save().then(async result => {
                     const token = jwt.sign({
-                        name:result.name,
-                        email:result.email
+                        name: result.name,
+                        email: result.email
                     }, process.env.SECRET);
                     let responseUserData = {
                         userEmail: result.email,
@@ -93,10 +93,37 @@ const register = (request, response) => {
                     response.status(500).json(error);
                 })
             });
-        }else{
-            response.status(409).json({'message':'Already exists'});
+        } else {
+            response.status(409).json({'message': 'Already exists'});
         }
     })
-
 }
-module.exports = {register}
+const login = (req, resp) => {
+    UserSchema.findOne({email: req.body.email}).then(exists => {
+        if (exists != null) {
+            bcrypt.compare(req.body.password, exists.password, function (err, result) {
+                if (err) {
+                    resp.status(403).json({'message': 'Forbidden'});
+                }
+                if (result) {
+                    const token = jwt.sign({
+                        name: exists.name,
+                        email: exists.email
+                    }, process.env.SECRET);
+                    let responseUserData = {
+                        userEmail: exists.email,
+                        token: token,
+                        status: 200,
+                        message: 'success!'
+                    }
+                    resp.status(200).json(responseUserData);
+                } else {
+                    resp.status(401).json({'message': 'UnAutherized'});
+                }
+            });
+        } else {
+            resp.status(404).json({'message': 'Not Found'});
+        }
+    })
+}
+module.exports = {register, login}
