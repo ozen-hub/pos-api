@@ -24,7 +24,7 @@ const findCustomer = (req, resp) => {
     })
 }
 const updateCustomer = (req, resp) => {
-    CustomerSchema.findOneAndUpdate(
+    /*CustomerSchema.findOneAndUpdate(
         {
             '_id': req.headers.id,
             $set: {
@@ -43,6 +43,26 @@ const updateCustomer = (req, resp) => {
 
     }).catch(error => {
         resp.status(500).json(error);
+    })*/
+    CustomerSchema.updateOne(
+        {
+            '_id': req.headers.id,
+            $set: {
+                name: req.body.name,
+                address: req.body.address,
+                salary: req.body.salary
+            }
+        },
+    ).then(result => {
+        console.log(result)
+        if (result.modifiedCount > 0) {
+            resp.status(201).json(result);
+        } else {
+            resp.status(500).json({'message': 'Something went wrong!'});
+        }
+
+    }).catch(error => {
+        resp.status(500).json(error);
     })
 }
 const deleteCustomer = (req, resp) => {
@@ -52,12 +72,7 @@ const deleteCustomer = (req, resp) => {
         },
     ).then(result => {
         console.log(result)
-        if (result.nModified > 0) {
             resp.status(201).json(result);
-        } else {
-            resp.status(500).json({'message': 'Something went wrong!'});
-        }
-
     }).catch(error => {
         resp.status(500).json(error);
     })
