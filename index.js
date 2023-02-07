@@ -9,6 +9,7 @@ mongoose.set('strictQuery', true);
 const UserRoute = require('./routes/UserRoute');
 const CustomerRoute = require('./routes/CustomerRoute');
 const ProductRoute = require('./routes/ProductRoute');
+const OrderRoute = require('./routes/OrderRoute');
 //==============================
 const app = express();
 const serverPort=process.env.SERVER_PORT;
@@ -30,6 +31,7 @@ mongoose.connect(
 app.use('/api/v1/user', UserRoute);
 app.use('/api/v1/customer', CustomerRoute);
 app.use('/api/v1/product', ProductRoute);
+app.use('/api/v1/order', OrderRoute);
 //==================
 app.get('/api/v1/test', (req, res) => {
     res.status(200).json({'message': 'success!'});
